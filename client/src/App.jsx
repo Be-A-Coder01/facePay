@@ -3,6 +3,7 @@ import Navbar from "./Pages/Navbar";
 import Balance from "./Pages/Balance";
 import Manager from "./Pages/Manager";
 import Transactions from "./Pages/Transactions";
+import Authentication from "./Pages/Authentication";
 
 const App = () => {
   const [isMobile, setIsMobile] = useState();
@@ -15,10 +16,11 @@ const App = () => {
     <div>
       {isMobile ? (
         <>
-          <Navbar></Navbar>
+          {/* <Navbar></Navbar>
           <Balance></Balance>
           <Manager></Manager>
-          <Transactions></Transactions>
+          <Transactions></Transactions> */}
+          <Authentication></Authentication>
         </>
       ) : (
         <div className="">
