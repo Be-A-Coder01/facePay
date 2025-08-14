@@ -8,6 +8,7 @@ const Balance = () => {
     >
       <p className="text-lg font-semibold text-gray-400">Total balance</p>
       <p className=" text-4xl font-bold">
+        <span id="rup">&#8377;</span>
         75,000<span className="text-gray-400">.53</span>
       </p>
     </div>

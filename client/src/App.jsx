@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "./Pages/Navbar";
 import Balance from "./Pages/Balance";
 import Manager from "./Pages/Manager";
+import Transactions from "./Pages/Transactions";
 
 const App = () => {
   const [isMobile, setIsMobile] = useState();
@@ -17,6 +18,7 @@ const App = () => {
           <Navbar></Navbar>
           <Balance></Balance>
           <Manager></Manager>
+          <Transactions></Transactions>
         </>
       ) : (
         <div className="">
