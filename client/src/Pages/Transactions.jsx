@@ -9,7 +9,7 @@ const Transactions = () => {
       className="mx-3 rounded-2xl flex flex-col gap-3 mt-10"
     >
       <p className="text-3xl font-semibold">Recent transactions</p>
-      <div className="flex justify-between">
+      <div className="flex ">
         <TransactionCards></TransactionCards>
         <TransactionCards></TransactionCards>
         <TransactionCards></TransactionCards>
