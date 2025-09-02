@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./Pages/Navbar";
-import Balance from "./Pages/Balance";
-import Manager from "./Pages/Manager";
-import Transactions from "./Pages/Transactions";
+import { Routes, Route } from "react-router-dom";
+
 import Authentication from "./Pages/Authentication";
+import Main from "./Pages/Main";
 
 const App = () => {
   const [isMobile, setIsMobile] = useState();
@@ -16,11 +15,10 @@ const App = () => {
     <div>
       {isMobile ? (
         <>
-          <Navbar></Navbar>
-          <Balance></Balance>
-          <Manager></Manager>
-          <Transactions></Transactions>
-          {/* <Authentication></Authentication> */}
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="/auth" element={<Authentication />} />
+          </Routes>
         </>
       ) : (
         <div className="">
