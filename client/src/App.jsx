@@ -16,11 +16,11 @@ const App = () => {
     <div>
       {isMobile ? (
         <>
-          {/* <Navbar></Navbar>
+          <Navbar></Navbar>
           <Balance></Balance>
           <Manager></Manager>
-          <Transactions></Transactions> */}
-          <Authentication></Authentication>
+          <Transactions></Transactions>
+          {/* <Authentication></Authentication> */}
         </>
       ) : (
         <div className="">
