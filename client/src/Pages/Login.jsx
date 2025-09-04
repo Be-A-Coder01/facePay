@@ -3,7 +3,7 @@ import { Camera } from "lucide-react";
 import { Link } from "react-router-dom";
 import faceLogo from "../assets/facepay-logo.png"; // place your uploaded image here
 
-export default function Signup() {
+export default function Login() {
   const [faceCaptured, setFaceCaptured] = useState(false);
 
   const handleFaceCapture = () => {
@@ -20,16 +20,14 @@ export default function Signup() {
           />
         </div>
 
-        <h1 className="text-2xl font-bold text-center mb-4">
-          FacePay - Sign Up
-        </h1>
+        <h1 className="text-2xl font-bold text-center mb-4">FacePay - Login</h1>
 
         <form className="space-y-4">
-          <input
+          {/* <input
             type="text"
             placeholder="Full Name"
             className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-blue-500 outline-none"
-          />
+          /> */}
           <input
             type="email"
             placeholder="Email"
@@ -40,6 +38,10 @@ export default function Signup() {
             placeholder="Password"
             className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-blue-500 outline-none"
           />
+
+          <p className="text-blue-500 text-center">OR</p>
+
+          <p className="text-center text-xl font-medium">Login through face</p>
 
           <div className="flex flex-col items-center mb-6 ">
             <button
@@ -56,15 +58,15 @@ export default function Signup() {
             type="submit"
             className="w-full bg-blue-500 hover:bg-blue-600 p-3 rounded-lg font-semibold"
           >
-            Create Account
+            login
           </button>
         </form>
 
         <p className="text-sm text-center mt-4">
-          Already have an account?
-          <a href="/login" className="text-blue-400 hover:underline">
-            <Link to="/login">Log In</Link>
-          </a>
+          Don't have an Account?
+          <Link className="text-blue-400 hover:underline" to="/signup">
+            Signup
+          </Link>
         </p>
       </div>
     </div>

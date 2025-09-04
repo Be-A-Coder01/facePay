@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    host: "0.0.0.0", // allow external devices
-    port: 5173, // (or any port you want)
+    host: "0.0.0.0",
+    port: 5173,
   },
 });

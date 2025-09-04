@@ -30,7 +30,7 @@ const Navbar = () => {
             <div className="flex gap-5  place-items-center py-1 text-gray-500">
               <i class="fa-solid fa-arrow-right-to-bracket"></i>
               <p className="text-xl font-medium">
-                <Link to="/auth">SignUp</Link>
+                <Link to="/login">SignUp</Link>
               </p>
             </div>
           </div>
