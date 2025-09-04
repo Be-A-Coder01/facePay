@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "../App.css";
 import "../FontStyle.css";
 
@@ -15,7 +16,7 @@ const Navbar = () => {
       {open && (
         <div className="absolute right-5 mt-10">
           <div
-            className=" shadow-gray-300 shadow-lg  flex flex-col gap-5 p-4 rounded-xl  bg-white   "
+            className=" shadow-gray-300 shadow-lg  flex flex-col gap-5 p-4 rounded-xl  bg-white"
             id="transactions"
           >
             <div className="flex gap-5  place-items-center py-1 text-gray-500">
@@ -28,7 +29,9 @@ const Navbar = () => {
             </div>
             <div className="flex gap-5  place-items-center py-1 text-gray-500">
               <i class="fa-solid fa-arrow-right-to-bracket"></i>
-              <p className="text-xl font-medium">SignUp</p>
+              <p className="text-xl font-medium">
+                <Link to="/auth">SignUp</Link>
+              </p>
             </div>
           </div>
         </div>

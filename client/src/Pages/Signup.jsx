@@ -6,13 +6,11 @@ export default function Signup() {
   const [faceCaptured, setFaceCaptured] = useState(false);
 
   const handleFaceCapture = () => {
-    // Camera capture logic here
     setFaceCaptured(true);
   };
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
       <div className="bg-gray-800 rounded-xl shadow-lg p-8 w-full max-w-md text-white">
-        {/* Logo */}
         <div className="flex justify-center mb-6">
           <img
             src={faceLogo}
@@ -21,12 +19,10 @@ export default function Signup() {
           />
         </div>
 
-        {/* Title */}
         <h1 className="text-2xl font-bold text-center mb-4">
           FacePay - Sign Up
         </h1>
 
-        {/* Form */}
         <form className="space-y-4">
           <input
             type="text"
@@ -44,7 +40,6 @@ export default function Signup() {
             className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-blue-500 outline-none"
           />
 
-          {/* Button */}
           <div className="flex flex-col items-center mb-6">
             <button
               onClick={handleFaceCapture}
@@ -64,9 +59,8 @@ export default function Signup() {
           </button>
         </form>
 
-        {/* Footer */}
         <p className="text-sm text-center mt-4">
-          Already have an account?{" "}
+          Already have an account?
           <a href="/login" className="text-blue-400 hover:underline">
             Log In
           </a>
