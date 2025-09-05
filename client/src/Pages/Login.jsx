@@ -23,11 +23,6 @@ export default function Login() {
         <h1 className="text-2xl font-bold text-center mb-4">FacePay - Login</h1>
 
         <form className="space-y-4">
-          {/* <input
-            type="text"
-            placeholder="Full Name"
-            className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-blue-500 outline-none"
-          /> */}
           <input
             type="email"
             placeholder="Email"
@@ -51,7 +46,7 @@ export default function Login() {
               <Camera className="w-8 h-8 text-white" />
             </button>
             <p className="mt-2 text-sm text-gray-400">
-              {faceCaptured ? "Face Captured ✅" : "Capture Your Face"}
+              {faceCaptured ? "Face Captured " : "Capture Your Face"}
             </p>
           </div>
           <button

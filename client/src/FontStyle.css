@@ -16,3 +16,17 @@
 #rup {
   font-family: 'Roboto', sans-serif
 }
+
+@keyframes scan {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(350px);
+  }
+}
+
+.animate-scan {
+  animation: scan 2s linear infinite alternate;
+}
