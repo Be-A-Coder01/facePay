@@ -5,18 +5,10 @@ const FaceAuthenticationPage = () => {
   const videoRef = useRef(null);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  // Start webcam when page loads
   useEffect(() => {
-    const loadModels = async () => {
-      try {
-        await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
-        await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
-        await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
-      } catch (err) {
-        console.error("Error loading face-api models:", err);
-      }
-    };
-
     const startVideo = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -24,74 +16,70 @@ const FaceAuthenticationPage = () => {
         });
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-
-          videoRef.current.onloadedmetadata = () => {
-            videoRef.current
-              .play()
-              .catch((err) => console.error("Error playing video:", err));
-          };
         }
       } catch (err) {
-        console.error("Error accessing webcam:", err);
-        alert("Camera access denied or not available");
+        console.error("Error accessing webcam: ", err);
       }
     };
 
-    loadModels().then(startVideo);
-
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev < 100) return prev + 1;
-        clearInterval(interval);
-        setStatus(true);
-        return 100;
-      });
-    }, 100);
-
-    return () => clearInterval(interval);
+    startVideo();
   }, []);
 
+  // Handle capture and progress loader
   const handleCapture = async () => {
     if (!videoRef.current) return;
 
-    const detection = await faceapi
-      .detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions())
-      .withFaceLandmarks()
-      .withFaceDescriptor();
+    setProgress(0);
+    setStatus(false);
+    setLoading(true);
 
-    if (!detection) {
-      alert("No face detected. Please try again.");
+    try {
+      // Load models only when capture starts
+      await Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
+        faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+        faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
+      ]);
+    } catch (err) {
+      console.error("Error loading models:", err);
+      alert("Failed to load face detection models");
+      setLoading(false);
       return;
     }
 
-    const descriptor = Array.from(detection.descriptor);
-    console.log("descriptor: ", descriptor);
+    const interval = setInterval(async () => {
+      const detection = await faceapi
+        .detectSingleFace(
+          videoRef.current,
+          new faceapi.TinyFaceDetectorOptions({
+            inputSize: 320,
+            scoreThreshold: 0.5,
+          })
+        )
+        .withFaceLandmarks()
+        .withFaceDescriptor();
 
-    // try {
-    //   const response = await fetch(
-    //     "http://localhost:5000/api/auth/register-face",
-    //     {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify({
-    //         name: "Adesh", // later use form input
-    //         email: "adesh@example.com", // later use form input
-    //         faceDescriptor: descriptor,
-    //       }),
-    //     }
-    //   );
+      if (detection) {
+        const newProgress = Math.min(
+          100,
+          Math.round(detection.detection.score * 100)
+        );
+        setProgress(newProgress);
 
-    //   const data = await response.json();
+        if (newProgress >= 90) {
+          clearInterval(interval);
+          setStatus(true);
+          setLoading(false);
 
-    //   if (data.success) {
-    //     alert("Face registered successfully!");
-    //   } else {
-    //     alert("Error: " + data.message);
-    //   }
-    // } catch (err) {
-    //   console.error("Error registering face:", err);
-    //   alert("Something went wrong, try again!");
-    // }
+          const descriptor = Array.from(detection.descriptor);
+          console.log("Face descriptor:", descriptor);
+
+          alert("✅ Face captured successfully!");
+        }
+      } else {
+        setProgress((prev) => (prev < 20 ? prev + 5 : prev));
+      }
+    }, 500);
   };
 
   return (
@@ -100,30 +88,33 @@ const FaceAuthenticationPage = () => {
         <video
           ref={videoRef}
           autoPlay
-          muted
           playsInline
           className="w-full h-full object-cover"
         ></video>
       </div>
 
       <div className="mt-6 w-[70%]">
-        <div className="w-full bg-gray-700 rounded-full h-2">
-          <div
-            className="bg-cyan-400 h-2 rounded-full transition-all duration-200"
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
-        <p className="text-center mt-2">{progress}%</p>
-        <p className="text-center text-sm mt-1">
-          {progress < 100 ? "Scanning..." : "Scan Complete"}
-        </p>
+        {loading && (
+          <>
+            <div className="w-full bg-gray-700 rounded-full h-2">
+              <div
+                className="bg-cyan-400 h-2 rounded-full transition-all duration-200"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            <p className="text-center mt-2">{progress}%</p>
+            <p className="text-center text-sm mt-1">
+              {progress < 100 ? "Detecting face..." : "Face Captured"}
+            </p>
+          </>
+        )}
 
-        {status && (
+        {!loading && (
           <button
             onClick={handleCapture}
             className="mt-8 w-[50vw] mx-11 py-3 bg-cyan-500 hover:bg-cyan-600 active:scale-95 rounded-lg text-lg font-semibold shadow-lg transition-all duration-200"
           >
-            Capture
+            Capture & Register
           </button>
         )}
       </div>
