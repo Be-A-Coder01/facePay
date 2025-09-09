@@ -6,8 +6,9 @@ const FaceAuthenticationPage = () => {
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  // Start webcam when page loads
+  // Start webcam on page load
   useEffect(() => {
     const startVideo = async () => {
       try {
@@ -19,19 +20,20 @@ const FaceAuthenticationPage = () => {
         }
       } catch (err) {
         console.error("Error accessing webcam: ", err);
+        setError("Camera access denied or not available.");
       }
     };
 
     startVideo();
   }, []);
 
-  // Handle capture and progress loader
   const handleCapture = async () => {
     if (!videoRef.current) return;
 
     setProgress(0);
     setStatus(false);
     setLoading(true);
+    setError("");
 
     try {
       // Load models only when capture starts
@@ -42,12 +44,22 @@ const FaceAuthenticationPage = () => {
       ]);
     } catch (err) {
       console.error("Error loading models:", err);
-      alert("Failed to load face detection models");
+      setError("Failed to load face detection models.");
       setLoading(false);
       return;
     }
 
-    const interval = setInterval(async () => {
+    let intervalId;
+    let timeoutId;
+
+    const stopDetection = (message = "") => {
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
+      setLoading(false);
+      if (message) setError(message);
+    };
+
+    intervalId = setInterval(async () => {
       const detection = await faceapi
         .detectSingleFace(
           videoRef.current,
@@ -67,9 +79,8 @@ const FaceAuthenticationPage = () => {
         setProgress(newProgress);
 
         if (newProgress >= 90) {
-          clearInterval(interval);
+          stopDetection();
           setStatus(true);
-          setLoading(false);
 
           const descriptor = Array.from(detection.descriptor);
           console.log("Face descriptor:", descriptor);
@@ -80,6 +91,11 @@ const FaceAuthenticationPage = () => {
         setProgress((prev) => (prev < 20 ? prev + 5 : prev));
       }
     }, 500);
+
+    // ⏳ 30-second timeout
+    timeoutId = setTimeout(() => {
+      stopDetection("❌ No face detected Please try again.");
+    }, 10000);
   };
 
   return (
@@ -89,6 +105,7 @@ const FaceAuthenticationPage = () => {
           ref={videoRef}
           autoPlay
           playsInline
+          muted
           className="w-full h-full object-cover"
         ></video>
       </div>
@@ -109,12 +126,16 @@ const FaceAuthenticationPage = () => {
           </>
         )}
 
+        {error && (
+          <p className="text-center mt-4 text-red-500 font-semibold">{error}</p>
+        )}
+
         {!loading && (
           <button
             onClick={handleCapture}
             className="mt-8 w-[50vw] mx-11 py-3 bg-cyan-500 hover:bg-cyan-600 active:scale-95 rounded-lg text-lg font-semibold shadow-lg transition-all duration-200"
           >
-            Capture & Register
+            Capture
           </button>
         )}
       </div>
